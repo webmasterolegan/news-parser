@@ -9,6 +9,8 @@ use App\Contracts\AddNewsFromParserContract;
 use App\Actions\AddNewsFromParser;
 use App\Contracts\RequestAndAddLatestNewsContract;
 use App\Actions\RequestAndAddLatestNews;
+use App\Contracts\DownloadImageContract;
+use App\Services\DownloadImage;
 
 class ParserServiceProvider extends ServiceProvider
 {
@@ -16,6 +18,7 @@ class ParserServiceProvider extends ServiceProvider
         ParserServiceContract::class => RssParserService::class,
         AddNewsFromParserContract::class => AddNewsFromParser::class,
         RequestAndAddLatestNewsContract::class => RequestAndAddLatestNews::class,
+        DownloadImageContract::class => DownloadImage::class,
     ];
 
     /**
@@ -29,6 +32,7 @@ class ParserServiceProvider extends ServiceProvider
             ParserServiceContract::class,
             AddNewsFromParserContract::class,
             RequestAndAddLatestNewsContract::class,
+            DownloadImageContract::class,
         ];
     }
 }
