@@ -7,8 +7,8 @@ use App\Contracts\ParserServiceContract;
 use App\Services\RssParserService;
 use App\Contracts\AddNewsFromParserContract;
 use App\Actions\AddNewsFromParser;
-use App\Contracts\RequestAndAddLatestNewsContract;
-use App\Actions\RequestAndAddLatestNews;
+use App\Contracts\CollectingNewNewsContract;
+use App\Services\CollectingNewNews;
 use App\Contracts\DownloadImageContract;
 use App\Services\DownloadImage;
 use App\Contracts\GetSortedNewsWithPaginationContract;
@@ -19,7 +19,7 @@ class ParserServiceProvider extends ServiceProvider
     public $bindings = [
         ParserServiceContract::class => RssParserService::class,
         AddNewsFromParserContract::class => AddNewsFromParser::class,
-        RequestAndAddLatestNewsContract::class => RequestAndAddLatestNews::class,
+        CollectingNewNewsContract::class => CollectingNewNews::class,
         DownloadImageContract::class => DownloadImage::class,
         GetSortedNewsWithPaginationContract::class => GetSortedNewsWithPagination::class,
     ];
@@ -34,7 +34,7 @@ class ParserServiceProvider extends ServiceProvider
         return [
             ParserServiceContract::class,
             AddNewsFromParserContract::class,
-            RequestAndAddLatestNewsContract::class,
+            CollectingNewNewsContract::class,
             DownloadImageContract::class,
             GetSortedNewsWithPaginationContract::class,
         ];
