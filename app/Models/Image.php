@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Events\ImageCreate;
 
 class Image extends Model
 {
@@ -40,4 +41,13 @@ class Image extends Model
     {
         return $this->belongsTo(News::class);
     }
+
+    /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'created' => ImageCreate::class,
+    ];
 }
