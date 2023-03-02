@@ -11,6 +11,8 @@ use App\Contracts\RequestAndAddLatestNewsContract;
 use App\Actions\RequestAndAddLatestNews;
 use App\Contracts\DownloadImageContract;
 use App\Services\DownloadImage;
+use App\Contracts\GetSortedNewsWithPaginationContract;
+use App\Actions\GetSortedNewsWithPagination;
 
 class ParserServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,7 @@ class ParserServiceProvider extends ServiceProvider
         AddNewsFromParserContract::class => AddNewsFromParser::class,
         RequestAndAddLatestNewsContract::class => RequestAndAddLatestNews::class,
         DownloadImageContract::class => DownloadImage::class,
+        GetSortedNewsWithPaginationContract::class => GetSortedNewsWithPagination::class,
     ];
 
     /**
@@ -33,6 +36,7 @@ class ParserServiceProvider extends ServiceProvider
             AddNewsFromParserContract::class,
             RequestAndAddLatestNewsContract::class,
             DownloadImageContract::class,
+            GetSortedNewsWithPaginationContract::class,
         ];
     }
 }
