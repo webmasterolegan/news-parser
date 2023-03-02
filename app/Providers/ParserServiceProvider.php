@@ -7,12 +7,15 @@ use App\Contracts\ParserServiceContract;
 use App\Services\RssParserService;
 use App\Contracts\AddNewsFromParserContract;
 use App\Actions\AddNewsFromParser;
+use App\Contracts\RequestAndAddLatestNewsContract;
+use App\Actions\RequestAndAddLatestNews;
 
 class ParserServiceProvider extends ServiceProvider
 {
     public $bindings = [
         ParserServiceContract::class => RssParserService::class,
         AddNewsFromParserContract::class => AddNewsFromParser::class,
+        RequestAndAddLatestNewsContract::class => RequestAndAddLatestNews::class,
     ];
 
     /**
@@ -25,6 +28,7 @@ class ParserServiceProvider extends ServiceProvider
         return [
             ParserServiceContract::class,
             AddNewsFromParserContract::class,
+            RequestAndAddLatestNewsContract::class,
         ];
     }
 }
