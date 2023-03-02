@@ -6,7 +6,7 @@ return [
     | URL RSS ленты новостей
     |--------------------------------------------------------------------------
     */
-    'rss_news_feed' => env('PARSER_INDEX_URL', 'http://static.feed.rbc.ru/rbc/logical/footer/news.rss'),
+    'rss_feed_url' => env('PARSER_RSS_FEED_URL', 'http://static.feed.rbc.ru/rbc/logical/footer/news.rss'),
 
     /*
     |--------------------------------------------------------------------------

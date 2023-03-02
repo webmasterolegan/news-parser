@@ -20,7 +20,7 @@ class RequestAndAddLatestNews implements RequestAndAddLatestNewsContract
     public function handle(): void
     {
         // Все новости, в массиве остортированном по дате публикации (published_at)
-        $news_from_rss_feed = $this->parser->getNews(config('parser.rss_news_feed'));
+        $news_from_rss_feed = $this->parser->getNews(config('parser.rss_feed_url'));
         if (count($news_from_rss_feed) == 0) return;
         // Список ссылок имеющихся новостей
         $isset_links = News::pluck('link')->toArray();
