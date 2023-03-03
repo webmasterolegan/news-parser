@@ -7,7 +7,6 @@ use App\Contracts\GetSortedNewsWithPaginationContract;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Utilities\GetAttributesFromRequest;
-use Illuminate\Support\Arr;
 
 class GetSortedNewsWithPagination implements GetSortedNewsWithPaginationContract
 {
@@ -27,10 +26,9 @@ class GetSortedNewsWithPagination implements GetSortedNewsWithPaginationContract
         $attributes[] = 'id';
         $relations = array_intersect(['image', 'authors'], $r_attributes);
 
-        $news = News::select(...$attributes)
+        return News::select(...$attributes)
             ->with($relations)
             ->orderBy($order_by, $direction)
             ->paginate($news_on_page);
-        return $news;
     }
 }
