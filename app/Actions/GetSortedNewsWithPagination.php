@@ -19,6 +19,9 @@ class GetSortedNewsWithPagination implements GetSortedNewsWithPaginationContract
         $order_by = $sort ? 'published_at' : 'id';
         $direction = $sort ? 'desc' : 'asc';
 
+        // По хорошему сюда следовало бы добавить некоторую оптимизацию, но я сегодня уже очень утомился
+        // Напрмер запрашивать из базы только то что указано в запросе атрибутов
+        // И не загружать не используемые связанные данные (authors, image)
         return News::with('authors', 'image')
             ->orderBy($order_by, $direction)
             ->paginate(config('parser.news_on_page'));
