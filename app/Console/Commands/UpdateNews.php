@@ -34,11 +34,11 @@ class UpdateNews extends Command implements Isolatable
         // Получение новых новостей
         $new_news = $service->getNewNews(config('parser.rss_feed_url'));
 
-        if ($new_news) {
-            // Добавление новых новостей
-            foreach ($new_news as $news_data) {
-                $action->handle($news_data);
-            }
+        if (!$new_news) return;
+
+        // Добавление новых новостей
+        foreach ($new_news as $news_data) {
+            $action->handle($news_data);
         }
     }
 }

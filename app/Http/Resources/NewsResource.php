@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Arr;
+use App\Utilities\GetAttributesFromRequest;
 
 class NewsResource extends JsonResource
 {
@@ -15,21 +15,19 @@ class NewsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $attributes = $request['attributes'] ? explode(',', $request['attributes']) : null;
+        $attributes = GetAttributesFromRequest::data($request);
 
-        $data = array_filter([
-            'id' => $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
-            'published_at' => $this->published_at,
-            'authors' => $this->authors->count() > 0
-                ? $this->authors->pluck('name')
-                : null,
-            'image' =>  $this->image
-                ? url('images/' . $this->image->name)
-                : null,
-        ], fn ($attribute) => $attribute);
+        if (!$attributes) return parent::toArray($request);
 
-        return !$attributes ? $data : Arr::only($data, $attributes);
+        $data = [];
+        foreach ($attributes as $attribute) {
+            $data[$attribute] = match($attribute) {
+                'authors' => $this->authors->count() > 0 ? $this->authors->pluck('name') : null,
+                'image' =>  $this->image ? url(config('parser.images_path') . $this->image->name) : null,
+                default => $this->$attribute
+            };
+        }
+
+        return array_filter($data, fn ($attribute) => $attribute);
     }
 }

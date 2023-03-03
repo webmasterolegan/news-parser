@@ -11,8 +11,11 @@ class RssParserService implements ParserServiceContract
     const PROCESS_CACHE_KEY = 'parser_in_progress'; // Ключ кеша хранения активности парсера (true/false)
     const PARSER_LOCK_TIME = 120; // Максимальное время хранения данных блокировки парсера
 
+    protected bool $lock;
+
     public function __construct()
     {
+        $this->lock = config('parser.lock');
         $this->startProcess();
     }
 
@@ -72,14 +75,21 @@ class RssParserService implements ParserServiceContract
         ));
     }
 
-    protected function startProcess()
+    protected function startProcess(): void
     {
+        if (!$this->lock) return;
         if (cache(self::PROCESS_CACHE_KEY)) exit('Другой процесс парсера всё ещё активен');
         cache([self::PROCESS_CACHE_KEY => true], self::PARSER_LOCK_TIME);
     }
 
+    protected function finishProcess(): void
+    {
+        if (!$this->lock) return;
+        cache([self::PROCESS_CACHE_KEY => false], self::PARSER_LOCK_TIME);
+    }
+
     public function __destruct()
     {
-        cache([self::PROCESS_CACHE_KEY => false], self::PARSER_LOCK_TIME);
+        $this->finishProcess();
     }
 }

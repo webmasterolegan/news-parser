@@ -15,7 +15,7 @@ class DownloadImage implements DownloadImageContract
     {
         $response = Http::get($url);
         if (!$response->successful()) return false;
-        Storage::put('images/' . $name, $response->body());
+        Storage::put(config('parser.images_path') . $name, $response->body());
         return true;
     }
 }
