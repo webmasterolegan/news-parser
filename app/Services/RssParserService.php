@@ -8,9 +8,19 @@ use App\Utilities\GetRssFeed;
 
 class RssParserService implements ParserServiceContract
 {
+    const PROCESS_CACHE_KEY = 'parser_in_progress'; // Ключ кеша хранения активности парсера (true/false)
+    const PARSER_LOCK_TIME = 120; // Максимальное время хранения данных блокировки парсера
+
+    public function __construct()
+    {
+        $this->startProcess();
+    }
+
     public function getNews(string $url): ?array
     {
         $rss_feed = GetRssFeed::data($url);
+
+        if(!$rss_feed) return null;
 
         $news_list = [];
         foreach ($rss_feed->item as $news) {
@@ -60,5 +70,16 @@ class RssParserService implements ParserServiceContract
             $news_list,
             fn (array $value): \DateTime => $value['published_at']
         ));
+    }
+
+    protected function startProcess()
+    {
+        if (cache(self::PROCESS_CACHE_KEY)) exit('Другой процесс парсера всё ещё активен');
+        cache([self::PROCESS_CACHE_KEY => true], self::PARSER_LOCK_TIME);
+    }
+
+    public function __destruct()
+    {
+        cache([self::PROCESS_CACHE_KEY => false], self::PARSER_LOCK_TIME);
     }
 }

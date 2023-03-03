@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Events\ImageCreate;
+use App\Events\ImageDeleting;
 
 class Image extends Model
 {
@@ -49,5 +50,6 @@ class Image extends Model
      */
     protected $dispatchesEvents = [
         'created' => ImageCreate::class,
+        'deleted' => ImageDeleting::class,
     ];
 }

@@ -3,8 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Contracts\RequestAndAddLatestNewsContract;
+use App\Contracts\CollectingNewNewsContract;
 use Illuminate\Contracts\Console\Isolatable;
+use App\Contracts\AddNewsFromParserContract;
 
 class UpdateNews extends Command implements Isolatable
 {
@@ -25,8 +26,19 @@ class UpdateNews extends Command implements Isolatable
     /**
      * Execute the console command.
      */
-    public function handle(RequestAndAddLatestNewsContract $action): void
+    public function handle(
+        CollectingNewNewsContract $service,
+        AddNewsFromParserContract $action
+    ): void
     {
-        $action->handle();
+        // Получение новых новостей
+        $new_news = $service->getNewNews(config('parser.rss_feed_url'));
+
+        if ($new_news) {
+            // Добавление новых новостей
+            foreach ($new_news as $news_data) {
+                $action->handle($news_data);
+            }
+        }
     }
 }

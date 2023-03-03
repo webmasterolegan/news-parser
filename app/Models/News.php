@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\NewsCreate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -45,4 +46,13 @@ class News extends Model
     {
         return $this->belongsToMany(Author::class);
     }
+
+    /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'created' => NewsCreate::class,
+    ];
 }
