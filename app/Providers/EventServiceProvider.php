@@ -6,6 +6,8 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use App\Events\ImageCreate;
 use App\Listeners\ImageCreated;
 use App\Listeners\ParserRequestLogger;
+use App\Events\NewsCreate;
+use App\Listeners\NewsCreated;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -17,6 +19,9 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         ImageCreate::class => [
             ImageCreated::class,
+        ],
+        NewsCreate::class => [
+            NewsCreated::class,
         ],
     ];
 
