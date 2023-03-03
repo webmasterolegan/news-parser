@@ -20,6 +20,8 @@ class RssParserService implements ParserServiceContract
     {
         $rss_feed = GetRssFeed::data($url);
 
+        if(!$rss_feed) return null;
+
         $news_list = [];
         foreach ($rss_feed->item as $news) {
             // Получение даты публикации новости

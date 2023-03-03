@@ -6,15 +6,15 @@ use Illuminate\Support\Facades\Http;
 
 class GetRssFeed
 {
-    public static function data(string $url)
+    public static function data(string $url): \SimpleXMLElement|false
     {
         $response = Http::get($url);
 
-        if ($response->failed()) return null;
+        if (!$response->successful()) return false;
 
         $rss_feed = simplexml_load_string($response->body());
 
-        if (!$rss_feed?->channel?->item) return null;
+        if (!$rss_feed) return false;
 
         return $rss_feed->channel;
     }

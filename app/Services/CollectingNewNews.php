@@ -20,7 +20,7 @@ class CollectingNewNews implements CollectingNewNewsContract
     {
         // Все новости, в массиве остортированном по дате публикации (published_at)
         $news_from_rss_feed = $this->parser->getNews($url);
-        if (count($news_from_rss_feed) == 0) return null;
+        if (!$news_from_rss_feed) return null;
 
         // Список ссылок имеющихся новостей
         $isset_links = Cache::rememberForever(
