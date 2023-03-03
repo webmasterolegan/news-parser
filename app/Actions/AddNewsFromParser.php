@@ -24,23 +24,15 @@ class AddNewsFromParser implements AddNewsFromParserContract
 
         if (!$news) return false;
 
-        // Добавление авторов новости если указаны
-        if ($news_data['authors']) {
-            foreach ($news_data['authors'] as $author_name) {
-                $author = Author::firstOrCreate(['name' => $author_name]);
-                $news->authors()->attach($author->id);
-            }
+        // Добавление авторов новости
+        foreach ($news_data['authors'] as $author_name) {
+            $author = Author::firstOrCreate(['name' => $author_name]);
+            $news->authors()->attach($author->id);
         }
 
         // Добавление файла изображения если указаны
         if ($news_data['image']) {
-            $image_extention = match($news_data['image']['type']) {
-                'image/jpeg' => 'jpg',
-                'image/png' => 'png',
-                'image/webp' => 'webp',
-                'image/gif' => 'gif',
-            };
-
+            $image_extention = config('parser.images_types')[$news_data['image']['type']];
             $image_name =  Str::random(32) . '.' . $image_extention;
 
             $news->image()->create([

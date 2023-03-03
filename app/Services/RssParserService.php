@@ -16,9 +16,18 @@ class RssParserService implements ParserServiceContract
     public function __construct()
     {
         $this->lock = config('parser.lock');
-        $this->startProcess();
+
+        if (!$this->lock) return;
+        if ($this->lock && cache(self::PROCESS_CACHE_KEY)) {
+            throw new \RuntimeException('Другой процесс парсера всё ещё активен');
+        }
+
+        cache([self::PROCESS_CACHE_KEY => true], self::PARSER_LOCK_TIME);
     }
 
+    /**
+     * Получение массива новостей по URL из XML документа
+     */
     public function getNews(string $url): ?array
     {
         $rss_feed = GetRssFeed::data($url);
@@ -31,28 +40,19 @@ class RssParserService implements ParserServiceContract
             $published_at = New \DateTime((string)$news->pubDate);
             // Преобразование даты публикации, согласно текущей часовой зоне
             $published_at->setTimezone(new \DateTimeZone(config('app.timezone')));
-            // Категория публикации
-            $category = strlen((string)$news->category > 0)
-                ? (string)$news->category
-                : null;
 
-            // Авторы новости, если указаны
-            $authors = $news->author
-                ? explode(', ', (string)$news->author)
-                : null;
+            // Категория публикации
+            $category = strlen((string)$news->category > 0) ? (string)$news->category : null;
+
+            // Авторы новости
+            $authors = $news->author ? explode(', ', (string)$news->author) : [];
 
             // URL обложки новости, если есть
+            // Получение тима изображения из xml
             $file_type = (string)$news->enclosure['type'];
-            $image = in_array($file_type, [
-                'image/jpeg',
-                'image/png',
-                'image/webp',
-                'image/gif',
-            ])
-                ? [
-                    'url' => (string)$news->enclosure['url'],
-                    'type' => $file_type,
-                ]
+            // Проверка допустимых типов
+            $image = in_array($file_type, array_keys(config('parser.images_types')))
+                ? ['url' => (string)$news->enclosure['url'], 'type' => $file_type]
                 : null;
 
             // Подготовка возвращаемого экземпляра новости
@@ -75,21 +75,9 @@ class RssParserService implements ParserServiceContract
         ));
     }
 
-    protected function startProcess(): void
-    {
-        if (!$this->lock) return;
-        if (cache(self::PROCESS_CACHE_KEY)) exit('Другой процесс парсера всё ещё активен');
-        cache([self::PROCESS_CACHE_KEY => true], self::PARSER_LOCK_TIME);
-    }
-
-    protected function finishProcess(): void
+    public function __destruct()
     {
         if (!$this->lock) return;
         cache([self::PROCESS_CACHE_KEY => false], self::PARSER_LOCK_TIME);
-    }
-
-    public function __destruct()
-    {
-        $this->finishProcess();
     }
 }
