@@ -47,4 +47,20 @@ return [
         'image/webp' => 'webp',
         'image/gif' => 'gif',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | API News допустимы значения для GET переменной attributes
+    |--------------------------------------------------------------------------
+    */
+    'news_attributes' => [
+        'id',
+        'title',
+        'description',
+        'published_at',
+    ],
+    'news_relations' => [
+        'authors',
+        'image',
+    ],
 ];

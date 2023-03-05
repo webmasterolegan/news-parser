@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Utilities\GetAttributesFromRequest;
+use Illuminate\Support\Arr;
 
 class NewsResource extends JsonResource
 {
@@ -15,9 +16,16 @@ class NewsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $attributes = GetAttributesFromRequest::data($request);
+        $r_attributes = GetAttributesFromRequest::data($request);
 
-        if (!$attributes) return parent::toArray($request);
+        $default_attributes = array_merge(
+            config('parser.news_attributes'),
+            config('parser.news_relations')
+        );
+
+        $attributes = !empty($r_attributes)
+            ? array_intersect($r_attributes, $default_attributes)
+            : $default_attributes;
 
         $data = [];
         foreach ($attributes as $attribute) {
