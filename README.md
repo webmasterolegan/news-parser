@@ -13,6 +13,8 @@
 
 Отладка [Laravel Telescope](https://laravel.com/docs/10.x/telescope)
 
+API Документация [Laravel Request Docs](https://github.com/rakutentech/laravel-request-docs)
+
 ## Описание
 
 Сбор и добавление новостей осуществляется командой:
@@ -46,6 +48,10 @@ composer install --dev
 ./vendor/bin/sail up
 
 ## API
+
+Документация
+
+*/request-docs*
 
 Получение новостей
 
