@@ -11,22 +11,20 @@ use Illuminate\Support\Str;
 class AddNewsFromParser implements AddNewsFromParserContract
 {
     /**
-     * Добавление новостей из массива сервиса парсера (App\Services\RssParser)
+     * Добавление экземпляра новости из парсера в базу
      */
     public function handle(array $news_data): bool
     {
-        // Подготовка массива для создания экземпляра модели новостей
-        $model_data = Arr::only($news_data, [
+        $news = News::create(Arr::only($news_data, [
             'link',
             'title',
             'description',
             'published_at'
-        ]);
-        $news = News::create($model_data);
+        ]));
 
         if (!$news) return false;
 
-        // Добавление авторов новости если указаны
+        // Добавление авторов новости
         if ($news_data['authors']) {
             foreach ($news_data['authors'] as $author_name) {
                 $author = Author::firstOrCreate(['name' => $author_name]);
@@ -36,14 +34,7 @@ class AddNewsFromParser implements AddNewsFromParserContract
 
         // Добавление файла изображения если указаны
         if ($news_data['image']) {
-            // Определение расширения файла изображения
-            $image_extention = match($news_data['image']['type']) {
-                'image/jpeg' => 'jpg',
-                'image/png' => 'png',
-                'image/webp' => 'webp',
-                'image/gif' => 'gif',
-            };
-
+            $image_extention = config('parser.images_types')[$news_data['image']['type']];
             $image_name =  Str::random(32) . '.' . $image_extention;
 
             $news->image()->create([

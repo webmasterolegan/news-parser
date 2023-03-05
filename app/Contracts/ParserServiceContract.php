@@ -2,7 +2,9 @@
 
 namespace App\Contracts;
 
+use Illuminate\Support\Collection;
+
 interface ParserServiceContract
 {
-    public function getNews(string $url): ?array;
+    public function getData(string $url): ?Collection;
 }

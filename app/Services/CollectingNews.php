@@ -2,12 +2,13 @@
 
 namespace App\Services;
 
-use App\Contracts\CollectingNewNewsContract;
+use App\Contracts\CollectingDataContract;
 use App\Contracts\ParserServiceContract;
 use App\Models\News;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Collection;
 
-class CollectingNewNews implements CollectingNewNewsContract
+class CollectingNews implements CollectingDataContract
 {
     public function __construct(
         private ParserServiceContract $parser
@@ -16,10 +17,9 @@ class CollectingNewNews implements CollectingNewNewsContract
     /**
      * Выборка новых новостей из RSS
      */
-    public function getNewNews(string $url): ?array
+    public function сollecting(string $url): ?Collection
     {
-        // Все новости, в массиве остортированном по дате публикации (published_at)
-        $news_from_rss_feed = $this->parser->getNews($url);
+        $news_from_rss_feed = $this->parser->getData(url: $url);
 
         if (!$news_from_rss_feed) return null;
 
@@ -29,13 +29,8 @@ class CollectingNewNews implements CollectingNewNewsContract
             fn () => News::pluck('link')->toArray()
         );
 
-        // Отсеивание новостей уже имеющихся в базе (по полю link)
-        $new_news = array_values(
-            array_filter(
-                $news_from_rss_feed,
-                fn (array $news_data): bool => !in_array($news_data['link'], $isset_links)
-            )
-        );
+        // Выборка новых новостей по полю link
+        $new_news = $news_from_rss_feed->filter(fn (array $news): bool => !in_array($news['link'], $isset_links));
 
         return $new_news;
     }

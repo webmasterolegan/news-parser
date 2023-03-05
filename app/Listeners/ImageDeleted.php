@@ -23,6 +23,6 @@ class ImageDeleted
     public function handle(ImageDeleting $event): void
     {
         logger($event->image->name);
-        Storage::delete('images/' . $event->image->name);
+        Storage::delete(config('parser.images_path') . $event->image->name);
     }
 }
