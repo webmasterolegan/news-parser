@@ -34,12 +34,12 @@ class AddNewsFromParser implements AddNewsFromParserContract
 
         // Добавление файла изображения если указаны
         if ($news_data['image']) {
-            $image_extention = config('parser.images_types')[$news_data['image']['type']];
-            $image_name =  Str::random(32) . '.' . $image_extention;
+            $extention = Str::of($news_data['image'])->match('/.*\.(.*)$/');
+            $image_name =  Str::random(32) . '.' . $extention;
 
             $news->image()->create([
                 'news_id' => $news->id,
-                'source_url' => $news_data['image']['url'],
+                'source_url' => $news_data['image'],
                 'name' => $image_name ,
             ]);
         }
