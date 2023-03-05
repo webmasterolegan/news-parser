@@ -11,6 +11,7 @@ class GetNews
     /**
      * @LRDparam attributes string|nullable
      * @LRDparam sort_by_date true|nullable
+     * @LRDparam page int|nullable
      * @lrd:start
      * В качестве значения аргумента **attributes** используется перечисление атрибутов через запятую.
      *
