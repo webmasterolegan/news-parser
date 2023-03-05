@@ -36,8 +36,8 @@ class UpdateNews extends Command implements Isolatable
 
         if (!$new_news) return;
 
-        // Добавление новых новостей
-        foreach ($new_news as $news_data) {
+        // Добавление новых новостей (отсортированных по дате пкбликации)
+        foreach ($new_news->sortBy('published_at') as $news_data) {
             $action->handle($news_data);
         }
     }
