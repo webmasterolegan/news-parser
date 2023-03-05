@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Contracts\CollectingNewNewsContract;
+use App\Contracts\CollectingDataContract;
 use Illuminate\Contracts\Console\Isolatable;
 use App\Contracts\AddNewsFromParserContract;
 
@@ -21,18 +21,18 @@ class UpdateNews extends Command implements Isolatable
      *
      * @var string
      */
-    protected $description = 'Получение и сохранение новостей';
+    protected $description = 'Получение новостей и сохранение новых';
 
     /**
-     * Execute the console command.
+     * Получение новостей и сохранение новых.
      */
     public function handle(
-        CollectingNewNewsContract $service,
+        CollectingDataContract $service,
         AddNewsFromParserContract $action
     ): void
     {
         // Получение новых новостей
-        $new_news = $service->getNewNews(config('parser.rss_feed_url'));
+        $new_news = $service->сollecting(config('parser.rss_feed_url'));
 
         if (!$new_news) return;
 

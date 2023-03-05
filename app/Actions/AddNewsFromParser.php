@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class AddNewsFromParser implements AddNewsFromParserContract
 {
     /**
-     * Добавление новости в базу из массива сервиса парсера (App\Services\RssParser)
+     * Добавление экземпляра новости из парсера в базу
      */
     public function handle(array $news_data): bool
     {
@@ -25,9 +25,11 @@ class AddNewsFromParser implements AddNewsFromParserContract
         if (!$news) return false;
 
         // Добавление авторов новости
-        foreach ($news_data['authors'] as $author_name) {
-            $author = Author::firstOrCreate(['name' => $author_name]);
-            $news->authors()->attach($author->id);
+        if ($news_data['authors']) {
+            foreach ($news_data['authors'] as $author_name) {
+                $author = Author::firstOrCreate(['name' => $author_name]);
+                $news->authors()->attach($author->id);
+            }
         }
 
         // Добавление файла изображения если указаны
