@@ -33,7 +33,10 @@ class RssParser implements ParserContract
         $published_at->setTimezone(new \DateTimeZone(config('app.timezone')));
 
         // Получение изображения новости, если есть
-        if (isset($item['enclosure'])) {
+        if (array_key_exists('enclosure', $item)
+            && array_key_exists('type', $item['enclosure'])
+            && array_key_exists('url', $item['enclosure'])
+        ) {
             $image = Arr::first(
                 $item['enclosure'],
                 // Первый элемент с соответствующим типом изображения
