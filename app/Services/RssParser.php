@@ -5,7 +5,6 @@ namespace App\Services;
 use Illuminate\Support\Collection;
 use App\Contracts\ParserContract;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
 class RssParser implements ParserContract
 {
