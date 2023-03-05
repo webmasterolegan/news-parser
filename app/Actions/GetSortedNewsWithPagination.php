@@ -17,13 +17,22 @@ class GetSortedNewsWithPagination implements GetSortedNewsWithPaginationContract
     {
         $r_attributes = GetAttributesFromRequest::data($request);
 
+        $default_attributes = ['title', 'description', 'published_at'];
+        $default_relations = ['image', 'authors'];
+
         $sort = filter_var($request['sort_by_date'], FILTER_VALIDATE_BOOLEAN);
         $order_by = $sort ? 'published_at' : 'id';
         $direction = $sort ? 'desc' : 'asc';
 
-        $attributes = array_intersect(['title', 'description', 'published_at'], $r_attributes);
+        $attributes = $r_attributes
+            ? array_intersect($default_attributes, $r_attributes)
+            : $default_attributes;
+
+        $relations = $r_attributes
+            ? array_intersect($default_relations, $r_attributes)
+            : $default_relations;
+
         $attributes[] = 'id';
-        $relations = array_intersect(['image', 'authors'], $r_attributes);
 
         return News::select(...$attributes)
             ->with($relations)
