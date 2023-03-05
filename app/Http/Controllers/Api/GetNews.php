@@ -16,7 +16,8 @@ class GetNews
      *
      * Пример: **attributes=id,title,description,published_at,authors,image**
      *
-     * Если атрибуты не указаны то ответ будет эвиалентен параметрам как в примере
+     * Если атрибуты не указаны, будет возвращён JSON с атрибутами как в примере *(id,title,description,published_at,authors,image)*.
+     *
      * @lrd:end
      */
     public function __invoke(
