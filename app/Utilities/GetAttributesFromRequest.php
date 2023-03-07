@@ -9,6 +9,7 @@ class GetAttributesFromRequest
     // Получение запрашиваемых атрибутов из GET запроса
     public static function data(Request $request): ?array
     {
-        return $request['attributes'] ? explode(',', $request['attributes']) : null;
+        $get_var = config('parser.get_attributes');
+        return $request[$get_var] ? explode(',', $request[$get_var]) : null;
     }
 }

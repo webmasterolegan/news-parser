@@ -37,7 +37,7 @@ class RssParser implements ParserContract
         // Получение URL изображения
         //$image = (string)$item->children('rbc_news', TRUE)?->image->children('rbc_news', TRUE)?->url;
         $image = $item?->enclosure?->attributes() ? $item?->enclosure?->attributes()[0] : null;
-        $image = $image && preg_match('/(.*)\.(jpeg|jpg|png|webp|gif){1}$/i', $image)
+        $image = $image && preg_match(config('parser.images_ext_reg'), $image)
             ? $image
             : null;
 

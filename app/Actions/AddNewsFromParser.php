@@ -40,7 +40,7 @@ class AddNewsFromParser implements AddNewsFromParserContract
 
         // Добавление файла изображения если указаны
         if ($news_data['image']) {
-            $extention = Str::of($news_data['image'])->match('/.*\.(.*)$/');
+            $extention = Str::of($news_data['image'])->match(config('parser.images_ext_reg'));
             $image_name =  Str::random(32) . '.' . $extention;
 
             $news->image()->create([
