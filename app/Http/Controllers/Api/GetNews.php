@@ -15,9 +15,9 @@ class GetNews
      * @lrd:start
      * В качестве значения аргумента **attributes** используется перечисление атрибутов через запятую.
      *
-     * Пример: **attributes=id,title,description,published_at,authors,image**
+     * Пример: **attributes=id,title,description,published_at,authors,image,category**
      *
-     * Если атрибуты не указаны, будет возвращён JSON с атрибутами как в примере *(id,title,description,published_at,authors,image)*.
+     * Если атрибуты не указаны, будет возвращён JSON с атрибутами как в примере *(id,title,description,published_at,authors,image,category)*.
      *
      * @lrd:end
      */

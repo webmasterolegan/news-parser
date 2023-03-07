@@ -48,6 +48,7 @@ return [
         'published_at',
     ],
     'news_relations' => [
+        'category',
         'authors',
         'image',
     ],

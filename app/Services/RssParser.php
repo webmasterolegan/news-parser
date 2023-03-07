@@ -42,7 +42,7 @@ class RssParser implements ParserContract
             'published_at' => $published_at,
             'authors' => isset($item->author) ? explode(', ', (string)$item->author) : null,
             'image' => strlen($image) > 0 ? $image : null,
-            'category' => strlen((string)$item->category > 0) ? (string)$item->category : null,
+            'category' => (string)$item->category,
         ];
     }
 }

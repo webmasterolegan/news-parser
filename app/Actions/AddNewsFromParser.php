@@ -7,6 +7,7 @@ use App\Models\News;
 use App\Models\Author;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use App\Models\Category;
 
 class AddNewsFromParser implements AddNewsFromParserContract
 {
@@ -15,12 +16,17 @@ class AddNewsFromParser implements AddNewsFromParserContract
      */
     public function handle(array $news_data): bool
     {
-        $news = News::create(Arr::only($news_data, [
-            'link',
-            'title',
-            'description',
-            'published_at'
-        ]));
+        $category = Category::firstOrCreate(['name' => $news_data['category']]);
+
+        $news = News::create([
+            'category_id' => $category->id,
+            ...Arr::only($news_data, [
+                'link',
+                'title',
+                'description',
+                'published_at'
+            ])
+        ]);
 
         if (!$news) return false;
 

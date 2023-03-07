@@ -32,6 +32,7 @@ class NewsResource extends JsonResource
             $data[$attribute] = match($attribute) {
                 'authors' => $this->authors->count() > 0 ? $this->authors->pluck('name') : null,
                 'image' =>  $this->image ? url(config('parser.images_path') . $this->image->name) : null,
+                'category' => $this->category->name,
                 default => $this->$attribute
             };
         }

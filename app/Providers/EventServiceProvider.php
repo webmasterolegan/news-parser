@@ -8,8 +8,8 @@ use App\Listeners\ImageCreated;
 use App\Events\ImageDeleting;
 use App\Listeners\ImageDeleted;
 use App\Listeners\ParserRequestLogger;
-use App\Events\NewsCreate;
-use App\Listeners\NewsCreated;
+use App\Models\News;
+use App\Observers\NewsObserver;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -21,9 +21,6 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         ImageCreate::class => [
             ImageCreated::class,
-        ],
-        NewsCreate::class => [
-            NewsCreated::class,
         ],
         ImageDeleting::class => [
             ImageDeleted::class,
@@ -37,5 +34,14 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $subscribe = [
         ParserRequestLogger::class,
+    ];
+
+    /**
+     * The model observers for your application.
+     *
+     * @var array
+     */
+    protected $observers = [
+        News::class => [NewsObserver::class],
     ];
 }
