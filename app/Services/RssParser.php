@@ -35,7 +35,11 @@ class RssParser implements ParserContract
         // Преобразование даты публикации, согласно текущей часовой зоне
         $published_at->setTimezone(new \DateTimeZone(config('app.timezone')));
         // Получение URL изображения
-        $image = (string)$item->children('rbc_news', TRUE)?->image->children('rbc_news', TRUE)?->url;
+        //$image = (string)$item->children('rbc_news', TRUE)?->image->children('rbc_news', TRUE)?->url;
+        $image = $item?->enclosure?->attributes() ? $item?->enclosure?->attributes()[0] : null;
+        $image = $image && preg_match('/(.*)\.(jpeg|jpg|png|webp|gif){1}$/i', $image)
+            ? $image
+            : null;
 
         return [
             ...Arr::only((array)$item, ['title', 'description', 'link', 'guid']),
