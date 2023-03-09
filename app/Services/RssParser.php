@@ -28,21 +28,25 @@ class RssParser implements ParserContract
     /**
      * Преобразование экземпляра новости к нужному виду
      */
-    private function parser(\SimpleXMLElement $item)
+    private function parser(\SimpleXMLElement $item): array
     {
         // Получение даты публикации новости
         $published_at = New \DateTime($item->pubDate);
         // Преобразование даты публикации, согласно текущей часовой зоне
         $published_at->setTimezone(new \DateTimeZone(config('app.timezone')));
         // Получение URL изображения
-        $image = (string)$item->children('rbc_news', TRUE)?->image->children('rbc_news', TRUE)?->url;
+        //$image = (string)$item->children('rbc_news', TRUE)?->image->children('rbc_news', TRUE)?->url;
+        $image = $item->enclosure ? $item->enclosure->attributes()[0] : null;
+        $image = $image && preg_match(config('parser.images_ext_reg'), $image)
+            ? $image
+            : null;
 
         return [
             ...Arr::only((array)$item, ['title', 'description', 'link', 'guid']),
             'published_at' => $published_at,
             'authors' => isset($item->author) ? explode(', ', (string)$item->author) : null,
             'image' => strlen($image) > 0 ? $image : null,
-            'category' => strlen((string)$item->category > 0) ? (string)$item->category : null,
+            'category' => (string)$item->category,
         ];
     }
 }

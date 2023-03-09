@@ -35,6 +35,11 @@ class GetSortedNewsWithPagination implements GetSortedNewsWithPaginationContract
             $attributes[] = 'id';
         }
 
+        // Добавление category_id если не указан, но требуется загрузка отношений
+        if ($relations && !array_intersect($attributes, ['category'])) {
+            $attributes[] = 'category_id';
+        }
+
         // Сортировка результатов
         $sort = filter_var($request['sort_by_date'], FILTER_VALIDATE_BOOLEAN);
         $order_by = $sort ? 'published_at' : 'id';

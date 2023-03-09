@@ -7,6 +7,7 @@ use App\Models\News;
 use App\Models\Author;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use App\Models\Category;
 
 class AddNewsFromParser implements AddNewsFromParserContract
 {
@@ -15,14 +16,19 @@ class AddNewsFromParser implements AddNewsFromParserContract
      */
     public function handle(array $news_data): bool
     {
-        $news = News::create(Arr::only($news_data, [
-            'link',
-            'title',
-            'description',
-            'published_at'
-        ]));
+        $category = Category::firstOrCreate(['name' => $news_data['category']]);
 
-        if (!$news) return false;
+        $news = News::create([
+            'category_id' => $category->id,
+            ...Arr::only($news_data, [
+                'link',
+                'title',
+                'description',
+                'published_at'
+            ])
+        ]);
+
+        if (!$news->exists) return false;
 
         // Добавление авторов новости
         if ($news_data['authors']) {
@@ -34,7 +40,7 @@ class AddNewsFromParser implements AddNewsFromParserContract
 
         // Добавление файла изображения если указаны
         if ($news_data['image']) {
-            $extention = Str::of($news_data['image'])->match('/.*\.(.*)$/');
+            $extention = Str::of($news_data['image'])->match(config('parser.images_ext_reg'));
             $image_name =  Str::random(32) . '.' . $extention;
 
             $news->image()->create([
