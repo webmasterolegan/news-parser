@@ -28,7 +28,7 @@ class AddNewsFromParser implements AddNewsFromParserContract
             ])
         ]);
 
-        if (!$news) return false;
+        if (!$news->exists) return false;
 
         // Добавление авторов новости
         if ($news_data['authors']) {

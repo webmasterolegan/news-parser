@@ -13,9 +13,9 @@ class ParserRequestLogger
      * Handle parser request events.
      */
     public function handleRequestComplete(ResponseReceived $event): void {
-        $content_type = $event->response->header('Content-Type') ?? null;
+        $content_type = $event->response->header('Content-Type');
         // Проверка на текстовое содержимое для корректно сохранения в базу
-        $content_body = $content_type && preg_match('/^text/i', $content_type)
+        $content_body = preg_match('/^text/i', $content_type)
             ? $event->response->body()
             : '(binary data: ' . $content_type . ')';
 

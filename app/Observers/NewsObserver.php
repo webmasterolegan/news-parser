@@ -39,7 +39,7 @@ class NewsObserver
      */
     public function deleted(News $news): void
     {
-        unset($array[array_search($news->link, $this->cache_news_links)]);
+        unset($this->cache_news_links[array_search($news->link, $this->cache_news_links)]);
         Cache::forever($this->cache_key, $this->cache_news_links);
     }
 
